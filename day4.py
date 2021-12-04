@@ -66,6 +66,26 @@ def part1(filename: str) -> int:
                 return number * sum_unmarked(board)
     return 0
 
+def part2(filename: str) -> int:
+    with open(filename) as f:
+        payload = f.read()
+    boards = get_boards(payload)
+    numbers = get_rolling_numbers(payload)
+    winning_boards = []
+    winning_numbers = []
+    for number in numbers:
+        for board in boards:
+            if board in winning_boards:
+                continue
+            for nb_case in board.values():
+                if nb_case.nb == number:
+                    nb_case.is_marked = True
+            if is_winning_board(board):
+                winning_boards.append(board)
+                winning_numbers.append(number)
+    return winning_numbers[-1] * sum_unmarked(winning_boards[-1])
+
 
 if __name__ == '__main__':
     print("part1", part1("inputs/day4.txt"))
+    print("part2", part2("inputs/day4.txt"))
